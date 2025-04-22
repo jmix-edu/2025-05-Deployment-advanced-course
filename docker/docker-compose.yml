@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  nginx:
+    image: nginx
+    ports:
+      - "8084:80"
+    volumes:
+      - ./etc/nginx.conf:/etc/nginx/nginx.conf:ro
+  jmix_pm_app-1:
+    image: app:latest
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      VAULT_HOST: jmix_pm_vault
+      VAULT_TOKEN: myroot
+      DEFAULT_USERNAME: admin
+  jmix_pm_app-2:
+    image: app:latest
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      VAULT_HOST: jmix_pm_vault
+      VAULT_TOKEN: myroot
+      DEFAULT_USERNAME: admin
+  jmix_pm_app-3:
+    image: jmix-pm:0.0.1-SNAPSHOT
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      VAULT_HOST: jmix_pm_vault
+      VAULT_TOKEN: myroot
+      DEFAULT_USERNAME: admin
+  jmix_pm_postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: jmix
+      POSTGRES_PASSWORD: jmix
+      POSTGRES_DB: deployment-docker-base
+  jmix_pm_vault:
+    image: hashicorp/vault:latest
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: myroot
+    ports:
+      - "8200:8200"

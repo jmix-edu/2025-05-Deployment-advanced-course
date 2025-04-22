@@ -11,7 +11,7 @@
                   <DataStoreSettingsV2>
                     <option name="generateDdlType" value="CREATE_AND_UPDATE" />
                     <option name="supportedTypes">
-                      <option value="hsql" />
+                      <option value="postgres" />
                     </option>
                   </DataStoreSettingsV2>
                 </value>

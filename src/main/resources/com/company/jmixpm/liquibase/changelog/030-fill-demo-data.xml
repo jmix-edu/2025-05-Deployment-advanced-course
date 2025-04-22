@@ -38,7 +38,7 @@
     <property name="task5Id" value="a1a8e49e-17dd-460c-922d-3dcf89afdd76"/>
     <property name="task6Id" value="d3191c5a-87a7-4496-aad2-1a62ddd0b494"/>
 
-    <changeSet id="1" author="jmix-pm" context="!cuba">
+    <changeSet id="1" author="jmix-pm" context="dev, !prod">
 
         <insert tableName="USER_" dbms="postgresql, mssql, hsqldb">
             <column name="ID" value="${dev1Id}"/>
@@ -67,7 +67,7 @@
         </insert>
 
     </changeSet>
-    <changeSet id="2" author="jmix-pm" context="!cuba">
+    <changeSet id="2" author="jmix-pm" context="dev, !prod">
 
         <insert tableName="USER_" dbms="postgresql, mssql, hsqldb">
             <column name="ID" value="${dev2Id}"/>
@@ -80,7 +80,7 @@
         </insert>
 
     </changeSet>
-    <changeSet id="3" author="jmix-pm">
+    <changeSet id="3" author="jmix-pm" context="dev, !prod">
         <insert tableName="PROJECT">
             <column name="ID" value="${project1Id}"/>
             <column name="NAME">Jmix trainings</column>
@@ -154,7 +154,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="4" author="jmix-pm">
+    <changeSet id="4" author="jmix-pm" context="dev, !prod">
         <insert tableName="TIME_ENTRY">
             <column name="ID" valueComputed="${uuid_function}"/>
             <column name="ENTRY_DATE" valueDate="${twoDaysAgo}"/>
