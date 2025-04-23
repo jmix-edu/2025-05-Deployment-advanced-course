@@ -20,19 +20,48 @@ services:
       VAULT_HOST: jmix_pm_vault
       VAULT_TOKEN: myroot
       DEFAULT_USERNAME: admin
-  jmix_pm_app-3:
-    image: jmix-pm:0.0.1-SNAPSHOT
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
-      VAULT_HOST: jmix_pm_vault
-      VAULT_TOKEN: myroot
-      DEFAULT_USERNAME: admin
   jmix_pm_postgres:
-    image: postgres:alpine
+    image: bitnami/pgpool:latest
     environment:
-      POSTGRES_USER: jmix
-      POSTGRES_PASSWORD: jmix
-      POSTGRES_DB: deployment-docker-base
+      - PGPOOL_BACKEND_NODES=0:jmix_pm_postgres-1:5432,1:jmix_pm_postgres-2:5432
+      - PGPOOL_SR_CHECK_USER=postgres
+      - PGPOOL_SR_CHECK_PASSWORD=postgres
+      - PGPOOL_SR_CHECK_PERIOD=10
+      - PGPOOL_POSTGRES_USERNAME=postgres
+      - PGPOOL_POSTGRES_PASSWORD=postgres
+      - PGPOOL_ADMIN_USERNAME=admin
+      - PGPOOL_ADMIN_PASSWORD=postgres
+      - PGPOOL_HEALTH_CHECK_PERIOD=1
+      - PGPOOL_HEALTH_CHECK_TIMEOUT=1
+      - PGPOOL_HEALTH_CHECK_MAX_RETRIES=1
+      - PGPOOL_HEALTH_CHECK_RETRY_DELAY
+    depends_on:
+      - jmix_pm_postgres-1
+      - jmix_pm_postgres-2
+  jmix_pm_postgres-1:
+    image: bitnami/postgresql-repmgr:latest
+    environment:
+      - POSTGRESQL_POSTGRES_PASSWORD=postgres
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=jmix_pm_db
+      - REPMGR_PASSWORD=repmgrpassword
+      - REPMGR_PRIMARY_HOST=jmix_pm_postgres-1
+      - REPMGR_PARTNER_NODES=jmix_pm_postgres-1,jmix_pm_postgres-2
+      - REPMGR_NODE_NAME=jmix_pm_postgres-1
+      - REPMGR_NODE_NETWORK_NAME=jmix_pm_postgres-1
+  jmix_pm_postgres-2:
+    image: bitnami/postgresql-repmgr:latest
+    environment:
+      - POSTGRESQL_POSTGRES_PASSWORD=postgres
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=jmix_pm_db
+      - REPMGR_PASSWORD=repmgrpassword
+      - REPMGR_PRIMARY_HOST=jmix_pm_postgres-1
+      - REPMGR_PARTNER_NODES=jmix_pm_postgres-1,jmix_pm_postgres-2
+      - REPMGR_NODE_NAME=jmix_pm_postgres-2
+      - REPMGR_NODE_NETWORK_NAME=jmix_pm_postgres-2
   jmix_pm_vault:
     image: hashicorp/vault:latest
     environment:
